@@ -54,7 +54,23 @@ void LR::log_l2()
 		}
 	}
 }
-
+void LR::log_stomatic()
+{
+	unsigned m = x.size();
+	unsigned n = x[0].size();
+	double temp = 0;
+	for(unsigned k = 0; k < times; k++)
+	{
+		for(unsigned i = 0; i < m; i++)// number of sample
+		{
+			temp = sigm(array_m(x[i] , theta));
+			for(unsigned j = 0; j < n; j++)// theta
+			{
+				theta[j] -= alpha * (temp - y[i]) * x[i][j];
+			}
+		}
+	}
+}
 vector<double> LR::array_multiply(vector<vector<double> > x, vector<int> y, vector<double> theta)
 {
 	unsigned n = theta.size();
@@ -150,7 +166,9 @@ int main(int argc, char* argv[])
 		cout<<"\t-times <int>"<<endl;
 		cout<<"\t\tdefault is 30"<<endl;
 		cout<<"\t-normal <int>"<<endl;
-		cout<<"\t\tdefault is no punish, the number is 0, others implement that has punish"<<endl;
+		cout<<"\t\tstandard gradient descent: 0 (default)"<<endl;
+		cout<<"\t\tstandard gradient descent with a punish: 1"<<endl;
+		cout<<"\t\tstochastic gradient descent: 2"<<endl;
 		
 		return 0;
 	}
@@ -236,10 +254,13 @@ int main(int argc, char* argv[])
 	cout<<"parameters: times "<<times<<", alpha "<<alpha<<", beta "<<beta<<endl;
 	cout<<"the formal is : "<<normal<<endl;
 	LR *lr = new LR(x, y, alpha, beta, times);
-	if(normal == 0)
-		lr->log_normal();
-	else
+
+	if(normal == 1)		
 		lr->log_l2();
+	else if(normal == 2)
+		lr->log_stomatic();
+	else
+		lr->log_normal();
 	lr->predict(xx,yy);
 	
 }
