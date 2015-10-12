@@ -1,0 +1,8 @@
+hmm toolkit v 1.0
+options:
+	-train <file>
+	-test <file>
+	-rest <file>
+
+just for supervised learning, unsupervised not accomplish.
+
